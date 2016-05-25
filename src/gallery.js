@@ -1,33 +1,13 @@
 import React, {Component} from "react";
+import { connect } from "react-redux";
+import {bindActionCreators} from "redux";
+import * as GalleryActions from "./actions.js";
 
-const flickrImages = [
-    "https://farm2.staticflickr.com/1553/25266806624_fdd55cecbc.jpg",
-  "https://farm2.staticflickr.com/1581/25283151224_50f8da511e.jpg",
-  "https://farm2.staticflickr.com/1653/25265109363_f204ea7b54.jpg",
-  "https://farm2.staticflickr.com/1571/25911417225_a74c8041b0.jpg",
-  "https://farm2.staticflickr.com/1450/25888412766_44745cbca3.jpg"
-];
-
-export default class Gallery extends Component {
-    constructor(props){
-        super(props);
-        this.state = {
-            images : flickrImages,
-            selectedImage:flickrImages[0]
-        }
-    }
-    componentDidMount(){
-        const API_KEY = 'a46a979f39c49975dbdd23b378e6d3d5';
-        const API_ENDPOINT = `https://api.flickr.com/services/rest/?method=flickr.interestingness.+getList&api_key=${API_KEY}&format=json&nojsoncallback=1&per_page=5`
-
-    }
-    handleClick(selectedImage){
-      this.setState({
-          selectedImage
-      })
-    }
+//export default class Gallery extends Component {
+export class Gallery extends Component {
+        
     render(){
-        const {images, selectedImage} = this.state;
+        const {images, selectedImage, selectImage} = this.props;
         return (
             <div className="image-gallery">
                 <div className="gallery-image">
@@ -37,7 +17,7 @@ export default class Gallery extends Component {
                 </div>
                 <div className="image-scroller">
                     {images.map((image, index) => (
-                        <div key={index} onClick={this.handleClick.bind(this, image)}>
+                        <div key={index} onClick={() => selectImage(image)}>
                             <img src={image} />
                         </div>
                     ))}
@@ -45,4 +25,15 @@ export default class Gallery extends Component {
             </div>            
         )
     }
+};
+
+function mapStateToProps(state){
+    return {
+        images : state.images,
+        selectedImage : state.selectedImage
+    }
 }
+function mapActionCreatorsToProps(dispatch){
+    return bindActionCreators(GalleryActions, dispatch);
+}
+export default connect(mapStateToProps, mapActionCreatorsToProps)(Gallery)
