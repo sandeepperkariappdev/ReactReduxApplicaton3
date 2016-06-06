@@ -5,7 +5,9 @@ import * as GalleryActions from "./actions.js";
 
 //export default class Gallery extends Component {
 export class Gallery extends Component {
-        
+    componentDidMount(){
+        this.props.loadImages();
+    }
     render(){
         const {images, selectedImage, selectImage} = this.props;
         return (
